@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+        <meta name="author" content="order by dede58.com"/>
+		<title>我的购物车-小米商城</title>
+		<link rel="stylesheet" type="text/css" href="../static/css/style.css">
+	</head>
+	<body>
+	<!-- start header -->
+	<!--end header -->
+<!--todo 购物车统计数量没写-->
+<!-- start banner_x -->
+		<div class="banner_x center">
+			<a href="index.html" target="_blank"><div class="logo fl"></div></a>
+			
+			<div class="wdgwc fl ml40">我的购物车</div>
+			<div class="wxts fl ml20">温馨提示：产品是否购买成功，以最终下单为准哦，请尽快结算</div>
+			<div class="fr">
+				<ul>
+					<li><a href="/login" target="_blank">登录</a></li>
+					<li>|</li>
+					<li><a href="/register" target="_blank" >注册</a></li>
+					<li>|</li>
+					<li><a href="">消息通知</a></li>
+				</ul>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="xiantiao"></div>
+		<div class="gwcxqbj">
+			<div class="gwcxd center">
+				<div class="top2 center">
+					<div class="sub_top fl">
+						<input type="checkbox" value="quanxuan" class="quanxuan" />全选
+					</div>
+					<div class="sub_top fl">商品名称</div>
+					<div class="sub_top fl">单价</div>
+					<div class="sub_top fl">数量</div>
+					<div class="sub_top fl">小计</div>
+					<div class="sub_top fr">操作</div>
+					<div class="clear"></div>
+				</div>
+                <tr th:each="c:${result.getData()}">
+				<div class="content2 center">
+					<div class="sub_content fl ">
+						<input type="checkbox" value="quanxuan" class="quanxuan" />
+					</div>
+					<div class="sub_content fl"><img height="80" width="80" th:src="@{/static/image/{b}(b=${c.getProduct().getPPicture()})}"></div>
+					<div class="sub_content fl ft20" th:text="${c.getProduct().getPName()}"></div>
+					<div class="sub_content fl " th:text="${c.getProduct().getPPrice()}+元"></div>
+					<div class="sub_content fl">
+						<input class="shuliang" type="number" th:value="${c.getCAmount()}" step="1" min="1" >
+					</div>
+					<div class="sub_content fl" th:text="${c.getProduct().getPPrice()}*${c.getCAmount()}+元"></div>
+					<div class="sub_content fl" ><a th:onclick="delete1([[${c.getCId()}]])">×</a></div>
+					<div class="clear"></div>
+				</div>
+                </tr>
+			</div>
+
+			<div class="jiesuandan mt20 center">
+				<div class="tishi fl ml20">
+					<ul>
+						<li><a href="/list">继续购物</a></li>
+						<li>|</li>
+						<li>共<span>2</span>件商品，已选择<span>1</span>件</li>
+						<div class="clear"></div>
+					</ul>
+				</div>
+				<div class="jiesuan fr">
+					<div class="jiesuanjiage fl">合计（不含运费）：<span>2499.00元</span></div>
+					<div class="jsanniu fr"><input class="jsan" type="submit" name="jiesuan"  value="去结算"/></div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			
+		</div>
+
+	</body>
+<script type="text/javascript" th:src="@{/static/js/jquery-1.8.3.js}" charset="utf-8"></script>
+<script>
+	function delete1(id){
+		alert(id);
+		$.ajax({
+			type: 'delete',
+			url: '/cart/delete',
+			data:{'cId':id},
+			success:function(result){
+				alert(1)
+				if (200 == result.code){
+					alert("删除成功");
+					// window.location = "http://localhost:8080/homemaking/admin/delete?aId="+id;
+				}
+			}
+		})
+	}
+</script>
+</html>

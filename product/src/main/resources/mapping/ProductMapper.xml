@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.product.mapper.ProductMapper">
+
+	<sql id="All" >
+		P_ID pId, P_NAME pName, P_PRICE pPrice, P_INVENTORY pInventory, P_PICTURE pPicture, P_STATUS pStatus, P_DETAILS pDetails
+	</sql>
+
+	<select id="findProductBypId" resultType="Product">
+		select <include refid="All" />
+		from product
+		where P_ID = #{pId}
+	</select>
+
+	<select id="count" resultType="int">
+		select count(P_ID) from product;
+	</select>
+
+	<select id="findAll" resultType="Product">
+		select <include refid="All" />
+		from product
+		limit #{param1},#{param2}
+	</select>
+</mapper>

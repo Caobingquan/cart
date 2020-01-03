@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cart.mapper.CartMapper">
+
+	<resultMap id="cartMap" type="Cart">
+		<id property="cId" column="C_ID"/>
+		<result property="cuId" column="C_U_ID"/>
+		<result property="cpId" column="C_P_ID"/>
+		<result property="cAmount" column="C_AMOUNT"/>
+		<!-- 映射menu -->
+		<association property="product" javaType="Product">
+			<id property="pId" column="P_ID"/>
+			<result property="pName" column="P_NAME"/>
+			<result property="pPrice" column="P_PRICE"/>
+			<result property="pPicture" column="P_PICTURE"/>
+		</association>
+	</resultMap>
+
+	<sql id="All">
+		C_ID cId, C_U_ID cuId, C_P_ID cpId, C_AMOUNT cAmount
+	</sql>
+
+	<insert id="add" parameterType="Cart">
+		insert into cart (C_U_ID,C_P_ID,C_AMOUNT) values (#{cuId},#{cpId},#{cAmount})
+	</insert>
+
+	<delete id="delete" parameterType="int">
+		delete from cart where C_ID = #{cId}
+	</delete>
+
+	<select id="count" resultType="int">
+		select count(C_ID) from cart where C_U_ID = #{uId};
+	</select>
+
+	<select id="findAll" resultMap="cartMap">
+		select C_ID, C_U_ID, C_P_ID, C_AMOUNT,P_NAME,P_PRICE,P_PICTURE
+		from cart left join product  on C_P_ID = P_ID
+		where C_U_ID = #{uId}
+		limit #{pageNo},#{pageSize}
+	</select>
+
+<!--	<select id="findAll" resultType="Cart">-->
+<!--		select <include refid="All" />-->
+<!--		from cart-->
+<!--		where C_U_ID = #{uId}-->
+<!--		limit #{pageNo},#{pageSize}-->
+<!--	</select>-->
+</mapper>
