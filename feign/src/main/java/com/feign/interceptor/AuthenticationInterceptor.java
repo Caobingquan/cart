@@ -82,11 +82,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     res.put("message","无效的token，请登录");
                     throw new RuntimeException("无效的token，请登录");
                 }
-
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application/json; charset=utf-8");
-                PrintWriter out = response.getWriter() ;
-                out.append(res.toString());
                 return true;
             }
         }

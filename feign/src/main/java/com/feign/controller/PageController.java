@@ -1,7 +1,11 @@
 package com.feign.controller;
 
+import com.feign.annotation.LoginToken;
+import com.feign.pojo.Cart;
+import com.feign.pojo.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author {曹炳全}
@@ -27,5 +31,11 @@ public class PageController {
     @GetMapping("/list")
     public String list() {
         return "list";
+    }
+    @LoginToken
+    @GetMapping("/cart")
+    public String cart(Result<Cart> result) {
+        System.out.println(result);
+        return "cart";
     }
 }

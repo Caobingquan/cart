@@ -22,7 +22,6 @@ public class CartController {
     CartFeign cartFeign;
 
 
-    @LoginToken
     @GetMapping("/findAll")
     public String findAll(@RequestParam(defaultValue = "1")int pageNo,@RequestParam(defaultValue = "5") int pageSize,@RequestParam(defaultValue = "1") int uId, Model model){
         Result<Cart> result = cartFeign.findAll(pageNo,pageSize,uId);
@@ -43,4 +42,5 @@ public class CartController {
         Result<Cart> result = cartFeign.delete(cId);
         return result;
     }
+
 }
