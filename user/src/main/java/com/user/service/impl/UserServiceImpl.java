@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
             String redisKey = "count:u"+uName;
             if (!redisUtils.hasKey(redisKey) || Integer.valueOf(String.valueOf(redisUtils.get(redisKey))) < 3){
                 if (uPassword.equals(getUser.getUPassword())){
-                    String token = TokenUtil.getToken("user",getUser.getUName());
+                    String token = TokenUtil.getToken("user",getUser.getUName(),getUser.getUId());
                     System.out.println(token);
                     redisUtils.set("user:"+uName,token,60*10);
                     redisUtils.del("count:u"+uName);

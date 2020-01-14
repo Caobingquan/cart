@@ -24,13 +24,26 @@ public class CartServiceImpl implements CartService {
     @Override
     public Result add(Cart cart) {
         Result result = new Result();
-        if (cartMapper.add(cart)>0){
-            result.setCode(200);
-            result.setMsg("添加成功");
+        Cart getCart = cartMapper.findCartByUidAndPid(cart.getCuId(),cart.getCpId());
+        if (getCart == null) {
+            if (cartMapper.add(cart)>0){
+                result.setCode(200);
+                result.setMsg("添加成功");
+            }else {
+                result.setCode(201);
+                result.setMsg("添加失败");
+            }
         }else {
-            result.setCode(201);
-            result.setMsg("添加失败");
+            cart.setCId(getCart.getCId());
+            if (cartMapper.updateCart(cart)>0){
+                result.setCode(200);
+                result.setMsg("添加成功");
+            }else {
+                result.setCode(201);
+                result.setMsg("添加失败");
+            }
         }
+
         return result;
     }
 

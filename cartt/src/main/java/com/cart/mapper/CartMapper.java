@@ -15,11 +15,26 @@ import java.util.List;
 public interface CartMapper {
 
     /**
+     * 根据用户编号和商品编号查询数据是否存在
+     * @param cuId
+     * @param cpId
+     * @return
+     */
+    Cart findCartByUidAndPid(int cuId,int cpId);
+
+    /**
      * 添加进购物车
      * @param cart
      * @return
      */
     int add(Cart cart);
+
+    /**
+     * 更新购物车
+     * @param cart
+     * @return
+     */
+    int updateCart(Cart cart);
 
     /**
      * 删除购物车

@@ -20,9 +20,18 @@
 		C_ID cId, C_U_ID cuId, C_P_ID cpId, C_AMOUNT cAmount
 	</sql>
 
+	<select id="findCartByUidAndPid" resultType="Cart">
+		select <include refid="All"/> from cart where C_U_ID = #{cuId} and C_P_ID = #{cpId};
+	</select>
+
 	<insert id="add" parameterType="Cart">
 		insert into cart (C_U_ID,C_P_ID,C_AMOUNT) values (#{cuId},#{cpId},#{cAmount})
 	</insert>
+
+	<update id="updateCart" parameterType="Cart">
+		update cart set C_AMOUNT = cart.C_AMOUNT+#{cAmount}
+		where C_ID = #{cId}
+	</update>
 
 	<delete id="delete" parameterType="int">
 		delete from cart where C_ID = #{cId}

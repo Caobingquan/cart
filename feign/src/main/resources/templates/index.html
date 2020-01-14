@@ -35,13 +35,22 @@
 					</ul>
 				</div>
 				<div class="right fr">
-					<!--<a href="/cart/findAll">购物车</a></div>-->
 					<a onclick="cart()"><div class="gouwuche fr">购物车</div></a>
 					<div class="fr">
 						<ul>
-							<li><a href="/login" target="_blank">登录</a></li>
+							<li th:if="${session.user == null}">
+								<a href="/login" target="_blank">登录</a>
+							</li>
+							<li th:if="${session.user != null}">
+								<a href="javascript:void(0)" th:text="${session.user.getUName()}">安全退出</a>
+							</li>
 							<li>|</li>
-							<li><a href="/register" target="_blank" >注册</a></li>
+							<li th:if="${session.user != null}">
+								<a href="../index.html" th:href="@{/user/logout}">退出</a>
+							</li>
+							<li th:if="${session.user == null}">
+								<a href="/register" target="_blank" >注册</a>
+							</li>
 							<li>|</li>
 							<li><a href="">消息通知</a></li>
 						</ul>

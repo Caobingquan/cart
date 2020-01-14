@@ -1,5 +1,6 @@
 package com.feign.controller;
 
+import com.auth0.jwt.JWT;
 import com.feign.annotation.LoginToken;
 import com.feign.feign.CartFeign;
 import com.feign.pojo.Cart;
@@ -23,15 +24,18 @@ public class CartController {
 
 
     @GetMapping("/findAll")
-    public String findAll(@RequestParam(defaultValue = "1")int pageNo,@RequestParam(defaultValue = "5") int pageSize,@RequestParam(defaultValue = "1") int uId, Model model){
+    public String findAll(@RequestParam(defaultValue = "1")int pageNo,@RequestParam(defaultValue = "50") int pageSize,@RequestParam(defaultValue = "1") int uId, Model model){
         Result<Cart> result = cartFeign.findAll(pageNo,pageSize,uId);
         model.addAttribute("result",result);
         return "cart";
     }
 
+    @LoginToken
     @ResponseBody
     @PostMapping("/add")
-    public Result add(Cart cart){
+    public Result add(@RequestHeader("token") String token,Cart cart){
+        int uId = JWT.decode(token).getClaim("uId").asInt();
+        cart.setCuId(uId);
         Result<Cart> result = cartFeign.add(cart);
         return result;
     }

@@ -10,6 +10,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.feign.annotation.LoginToken;
 import com.feign.annotation.PassToken;
+import com.feign.utils.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -27,8 +29,11 @@ import java.lang.reflect.Method;
  * @Description
  * @date 2019/12/19 16:48
  */
+@Slf4j
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
+    @Autowired
+    RedisUtils redisUtils;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -59,6 +64,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 if(token == null){
                     res.put("code",300);
                     res.put("message","无token，请登录");
+                    log.error("无token，请登录");
                     throw new RuntimeException("无token，请登录");
                 }
                 //验证token是否过期
@@ -68,14 +74,17 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }catch (JWTVerificationException e){
                     res.put("code",301);
                     res.put("message","token已过期，请重新登录");
+                    log.error("token已过期，请重新登录");
                     throw new RuntimeException("token已过期，请重新登录");
                 }
 
                 String accountPhone = null;
-                String accountType = null;
+
                 try{
                     accountPhone = JWT.decode(token).getClaim("phone").asString();
-                    accountType = JWT.decode(token).getClaim("type").asString();
+                    if (redisUtils.hasKey("user:"+accountPhone) == false){
+                        throw new RuntimeException("无效的token，请登录");
+                    }
                 }
                 catch (JWTDecodeException e){
                     res.put("code",300);
