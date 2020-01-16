@@ -8,6 +8,10 @@
 		where U_NAME = #{uName}
 	</select>
 
+	<insert id="addUser" parameterType="User">
+    	insert into user (U_NAME,U_PASSWORD,U_PHONE) values (#{uName},#{uPassword},#{uPhone})
+  	</insert>
+
 	<update id="updateUserByuName" parameterType="User">
 		update user set U_SEX = #{uSex}, U_PHONE = #{uPhone},U_ADDRESS = #{uAddress}
 		where U_ID = #{uId}

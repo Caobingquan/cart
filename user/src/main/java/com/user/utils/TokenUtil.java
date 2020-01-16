@@ -19,7 +19,7 @@ public class TokenUtil {
      * @return
      */
     public static String getToken(String type, String phone,int uId){
-        Date expireDate = new Date(System.currentTimeMillis()+60*60*1000);//1个小时
+        Date expireDate = new Date(System.currentTimeMillis()+60*60*1000);
         String token = "";
         token = JWT.create()
                 .withClaim("uId",uId)

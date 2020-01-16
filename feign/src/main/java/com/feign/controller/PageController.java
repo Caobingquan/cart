@@ -4,7 +4,9 @@ import com.auth0.jwt.JWT;
 import com.feign.annotation.LoginToken;
 import com.feign.pojo.Cart;
 import com.feign.pojo.Result;
+import com.feign.pojo.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class PageController {
 
-    @GetMapping("/index")
+    @RequestMapping("/index")
     public String index(){
         return "index";
     }
@@ -28,7 +30,9 @@ public class PageController {
         return "login";
     }
     @GetMapping("/register")
-    public String register(){
+    public String register(Model model){
+        User user = new User();
+        model.addAttribute("user",user);
         return "register";
     }
     @GetMapping("/list")
@@ -40,7 +44,6 @@ public class PageController {
     @GetMapping("/cart")
     public String cart(@RequestHeader("token") String token) {
         int uId = JWT.decode(token).getClaim("uId").asInt();
-        System.out.println(uId);
         return ""+uId;
     }
 }

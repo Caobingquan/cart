@@ -3,9 +3,13 @@ package com.feign.controller;
 import com.feign.feign.UserFeign;
 import com.feign.pojo.Result;
 import com.feign.pojo.User;
+import com.feign.utils.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +19,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -26,27 +31,52 @@ import java.util.*;
  * @Description
  * @date 2019/12/27 15:54
  */
+@Slf4j
 @Controller
 @RequestMapping("/user")
 public class UserController {
     @Autowired
     UserFeign userFeign;
+    @Autowired
+    RedisUtils redisUtils;
 
     @PostMapping("/login")
     public String login(String uName, String uPassword, HttpServletResponse response, Model model, HttpSession session){
         Result<User> result = userFeign.login(uName,uPassword);
-        Cookie cookie = new Cookie("token", result.getMsg());
-        cookie.setMaxAge(3600);
-        cookie.setDomain("localhost");
-        cookie.setPath("/");
-        response.addCookie(cookie);
         if(200 == result.getCode()){
-            System.out.println(result.getData().get(0));
+            Cookie cookie = new Cookie("token", result.getMsg());
+            cookie.setMaxAge(3600);
+            cookie.setDomain("localhost");
+            cookie.setPath("/");
+            response.addCookie(cookie);
+            log.info(result.getData().get(0).toString());
             session.setAttribute("user",result.getData().get(0));
-            return "index";
+            return "redirect:../index";
         }
         model.addAttribute("msg",result.getMsg());
         return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,String uName){
+        request.getSession().removeAttribute("user");
+        redisUtils.del("user:"+uName);
+        return "redirect:../index";
+    }
+
+    @PostMapping("/register")
+    public String register(@Valid User user, BindingResult result,Model model){
+        if (result.hasErrors()) {
+            model.addAttribute("user", user);
+            return "register";
+        }
+        Result<User> result1 = userFeign.register(user);
+        if(200 == result1.getCode()){
+            return "redirect:../login";
+        }else{
+            model.addAttribute("msg",result1.getMsg());
+            return "register";
+        }
     }
 
     /**
@@ -55,7 +85,6 @@ public class UserController {
     @RequestMapping("/checkcode")
     @ResponseBody
     public String checkcode(HttpServletRequest request, String checkcode){
-        System.out.println("yhdd");
         String sessionCode = (String) request.getSession().getAttribute("imgCode");
         if (null == sessionCode || "".equals(sessionCode) || null == checkcode || "".equals(checkcode)) {
             return "{\"msg\":\"m1\"}";
@@ -72,7 +101,7 @@ public class UserController {
     @RequestMapping("/createImage")
     public void code(HttpServletRequest request, HttpServletResponse response){
         //1.规定验证码范围
-        System.out.println("createImage");
+        log.info("生成图片验证码");
         char[] chars="qwertyuiopasdfghjklzxcvbnm148523690".toCharArray();
         //2.获取一个Image 对象 用于存放图片
         BufferedImage image =new BufferedImage(80,20,BufferedImage.TYPE_3BYTE_BGR);

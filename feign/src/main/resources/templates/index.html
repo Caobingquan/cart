@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
         <meta name="author" content="order by dede58.com"/>
 		<title>小米商城</title>
-		<link rel="stylesheet" type="text/css" href="../static/css/style.css">
+		<link rel="stylesheet" type="text/css" th:href="@{/static/css/style.css}">
 	</head>
 	<body>
 	<!-- start header -->
@@ -12,7 +12,7 @@
 			<div class="top center">
 				<div class="left fl">
 					<ul>
-						<li><a href="http://www.mi.com/" target="_blank">小米商城</a></li>
+						<li><a href="/index" target="_blank">小米商城</a></li>
 						<li>|</li>
 						<li><a href="">MIUI</a></li>
 						<li>|</li>
@@ -42,11 +42,11 @@
 								<a href="/login" target="_blank">登录</a>
 							</li>
 							<li th:if="${session.user != null}">
-								<a href="javascript:void(0)" th:text="${session.user.getUName()}">安全退出</a>
+								<a href="javascript:void(0)" th:text="${session.user.getUName()}"></a>
 							</li>
 							<li>|</li>
 							<li th:if="${session.user != null}">
-								<a href="../index.html" th:href="@{/user/logout}">退出</a>
+								<a href="../index.html" th:href="@{${'/user/logout'}(uName=${session.user.getUName()})}">退出</a>
 							</li>
 							<li th:if="${session.user == null}">
 								<a href="/register" target="_blank" >注册</a>

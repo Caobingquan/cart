@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
         <meta name="author" content="order by dede58.com"/>
 		<title>会员登录</title>
-		<link rel="stylesheet" type="text/css" href="../static/css/login.css">
+		<link rel="stylesheet" type="text/css" th:href="@{/static/css/login.css}">
 		
 	</head>
 	<body>
@@ -34,7 +34,7 @@
 					</div>
 				</div>
 				<div class="login_submit">
-					<input class="submit" type="submit" name="submit" id="button" value="立即登录" >
+					<input class="submit" type="submit" name="submit" id="button" value="立即登录" disabled >
 				</div>
 				
 			</div>

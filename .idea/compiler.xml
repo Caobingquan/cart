@@ -13,6 +13,7 @@
         <module name="feign" />
         <module name="cartt" />
         <module name="configserver" />
+        <module name="eureka2" />
       </profile>
     </annotationProcessing>
   </component>
@@ -21,6 +22,7 @@
       <module name="cartt" options="-parameters" />
       <module name="configserver" options="-parameters" />
       <module name="eureka" options="-parameters" />
+      <module name="eureka2" options="-parameters" />
       <module name="feign" options="-parameters" />
       <module name="product" options="-parameters" />
       <module name="user" options="-parameters" />

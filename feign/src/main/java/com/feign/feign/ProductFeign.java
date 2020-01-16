@@ -22,6 +22,12 @@ public interface ProductFeign {
      */
     @GetMapping("/product/findAll/{pageNo}/{pageSize}")
     Result<Product> findAll(@PathVariable("pageNo") int pageNo, @PathVariable("pageSize") int pageSize);
+
+    /**
+     * 显示单个商品
+     * @param pId
+     * @return
+     */
     @GetMapping("/product/one/{pId}")
     Product one(@PathVariable int pId);
 }

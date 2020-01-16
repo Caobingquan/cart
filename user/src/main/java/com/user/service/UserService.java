@@ -1,6 +1,7 @@
 package com.user.service;
 
 import com.user.pojo.Result;
+import com.user.pojo.User;
 
 /**
  * @author {曹炳全}
@@ -16,4 +17,11 @@ public interface UserService {
      * @return
      */
     Result login(String uName,String uPassword);
+
+    /**
+     * 注册
+     * @param user
+     * @return
+     */
+    Result register(User user);
 }

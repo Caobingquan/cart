@@ -19,6 +19,13 @@ public interface UserMapper {
     User findUserByuName(String uName);
 
     /**
+     * 添加用户
+     * @param user
+     * @return
+     */
+    int addUser(User user);
+
+    /**
      * 通过用户名更新用户信息
      * @param user
      * @return

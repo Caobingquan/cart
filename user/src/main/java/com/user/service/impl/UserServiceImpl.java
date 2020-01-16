@@ -6,6 +6,7 @@ import com.user.pojo.User;
 import com.user.service.UserService;
 import com.user.utils.RedisUtils;
 import com.user.utils.TokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * @Description
  * @date 2019/12/27 14:40
  */
+@Slf4j
 @Service("userService")
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -41,10 +43,9 @@ public class UserServiceImpl implements UserService {
             if (!redisUtils.hasKey(redisKey) || Integer.valueOf(String.valueOf(redisUtils.get(redisKey))) < 3){
                 if (uPassword.equals(getUser.getUPassword())){
                     String token = TokenUtil.getToken("user",getUser.getUName(),getUser.getUId());
-                    System.out.println(token);
+                    log.info(token);
                     redisUtils.set("user:"+uName,token,60*10);
                     redisUtils.del("count:u"+uName);
-                    System.out.println(redisUtils.get("user:"+uName));
                     result.setCode(200);
                     List<User> users = new ArrayList<>();
                     users.add(getUser);
@@ -61,6 +62,25 @@ public class UserServiceImpl implements UserService {
                 result.setCode(203);
                 result.setMsg("账号被锁定");
             }
+        }
+        return result;
+    }
+
+    @Override
+    public Result register(User user) {
+        User getUser = userMapper.findUserByuName(user.getUName());
+        Result result = new Result();
+        if (null==getUser){
+            if (userMapper.addUser(user) >0){
+                result.setCode(200);
+                result.setMsg("注册成功");
+            }else {
+                result.setCode(202);
+                result.setMsg("注册失败");
+            }
+        }else {
+            result.setCode(201);
+            result.setMsg("用户名存在");
         }
         return result;
     }

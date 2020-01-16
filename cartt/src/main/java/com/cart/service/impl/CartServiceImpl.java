@@ -60,7 +60,6 @@ public class CartServiceImpl implements CartService {
         return result;
     }
 
-//    @Cacheable(value = "carts",key = "#uId+':'+#pageNo+':'+#pageSize")
     @Override
     public Result findAllByLimit(int pageNo, int pageSize, int uId) {
         Result result = new Result();

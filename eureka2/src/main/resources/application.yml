@@ -1,5 +1,5 @@
 server:
-  port: 8761
+  port: 8762
 eureka:
   instance:
     hostname: localhost
@@ -13,4 +13,4 @@ eureka:
     enable-self-preservation: false
 spring:
   application:
-    name: eureka
+    name: eureka2

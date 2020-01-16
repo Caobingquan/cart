@@ -23,8 +23,8 @@ public class CartController {
     CartFeign cartFeign;
 
 
-    @GetMapping("/findAll")
-    public String findAll(@RequestParam(defaultValue = "1")int pageNo,@RequestParam(defaultValue = "50") int pageSize,@RequestParam(defaultValue = "1") int uId, Model model){
+    @GetMapping("/findAll/{uId}")
+    public String findAll(@RequestParam(defaultValue = "1")int pageNo,@RequestParam(defaultValue = "50") int pageSize,@PathVariable("uId") int uId, Model model){
         Result<Cart> result = cartFeign.findAll(pageNo,pageSize,uId);
         model.addAttribute("result",result);
         return "cart";

@@ -19,13 +19,13 @@ public class TokenUtil {
      * @return
      */
     public static String getToken(String type, String phone){
-        Date expireDate = new Date(System.currentTimeMillis()+60*60*1000);//1个小时
+        Date expireDate = new Date(System.currentTimeMillis()+60*60*1000);
         String token = "";
         token = JWT.create()
-                .withClaim("phone",phone)//存的信息
+                .withClaim("phone",phone)
                 .withClaim("type",type)
-                .withExpiresAt(expireDate)//设置签名过期的时间
-                .sign(Algorithm.HMAC256("secret"));// 把secret是用来加密数字签名的密钥
+                .withExpiresAt(expireDate)
+                .sign(Algorithm.HMAC256("secret"));
         return token;
     }
 }

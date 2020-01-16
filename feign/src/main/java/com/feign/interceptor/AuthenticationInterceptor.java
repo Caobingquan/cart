@@ -10,6 +10,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.feign.annotation.LoginToken;
 import com.feign.annotation.PassToken;
+import com.feign.pojo.User;
 import com.feign.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,9 +80,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
 
                 String accountPhone = null;
-
+                int uId = 0;
                 try{
                     accountPhone = JWT.decode(token).getClaim("phone").asString();
+                    uId = JWT.decode(token).getClaim("uId").asInt();
                     if (redisUtils.hasKey("user:"+accountPhone) == false){
                         throw new RuntimeException("无效的token，请登录");
                     }
@@ -89,8 +91,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 catch (JWTDecodeException e){
                     res.put("code",300);
                     res.put("message","无效的token，请登录");
-                    throw new RuntimeException("无效的token，请登录");
+                    throw new RuntimeException("假的token，请登录");
                 }
+                User user = new User();
+                user.setUId(uId);
+                user.setUName(accountPhone);
+                log.info(String.valueOf(user));
+                request.getSession().setAttribute("user",user);
                 return true;
             }
         }

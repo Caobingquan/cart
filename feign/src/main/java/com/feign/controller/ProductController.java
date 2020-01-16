@@ -28,8 +28,8 @@ public class ProductController {
         return "list";
     }
 
-    @GetMapping("/one")
-    public String one(int pId,Model model) {
+    @GetMapping("/one/{pId}")
+    public String one(@PathVariable int pId,Model model) {
         Product product = productFeign.one(pId);
         model.addAttribute("product",product);
         return "xiangqing";
